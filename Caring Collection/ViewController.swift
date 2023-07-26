@@ -32,39 +32,20 @@ class ViewController: UIViewController {
 
 extension ViewController: UICollectionViewDelegateFlowLayout, UICollectionViewDataSource{
     
-    //    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-    //        var visibleRect = CGRect()
-    //
-    //        visibleRect.origin = collectionView.contentOffset
-    //        visibleRect.size = CGSize(width: collectionView.bounds.size.width, height: collectionView.bounds.size.height)
-    //
-    //        let visiblePoint = CGPoint(x: visibleRect.midX, y: visibleRect.midY)
-    //
-    //        let visibleIndexPath: IndexPath = collectionView.indexPathForItem(at: visiblePoint) ?? IndexPath()
-    //        let indexPath = IndexPath(item: visibleIndexPath.item, section: 0)
-    //        collectionView.contentInset = UIEdgeInsets(top: 0, left: 15, bottom: 0, right: 0)
-    //        collectionView.selectItem(at: indexPath, animated: true, scrollPosition: .left)
-    //    }
-    
     func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+        
         let target = targetContentOffset.pointee
-        // получить центр экрана
         let center = CGPoint(x: target.x + collectionView.bounds.width / 2, y: target.y + collectionView.bounds.height / 2)
-        // получить индекс ячейки в центре экрана
+        
         guard let indexPath = collectionView.indexPathForItem(at: center) else { return }
-        // получить фрейм ячейки по индексу
         guard let attributes = collectionView.layoutAttributesForItem(at: indexPath) else { return }
-        // получить отступы коллекции
+        
         let insets = collectionView.contentInset
-        // получить размер ячейки
         let itemSize = attributes.frame.size
-        // получить расстояние между ячейками
         let spacing = (collectionView.collectionViewLayout as? UICollectionViewFlowLayout)?.minimumLineSpacing ?? 0
-        // вычислить новую позицию скролла, округлив до ближайшей ячейки и учитывая отступы, размер и расстояние
         let newX = round((target.x - insets.left) / (itemSize.width + spacing)) * (itemSize.width + spacing) + insets.left
-        // установить новую позицию скролла
+        
         targetContentOffset.pointee = CGPoint(x: newX, y: target.y)
-        // выделить ячейку по индексу
         collectionView.selectItem(at: indexPath, animated: true, scrollPosition: .left)
     }
     
